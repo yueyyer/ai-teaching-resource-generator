@@ -4,87 +4,118 @@
 
 [简体中文](README.md) | **English**
 
-An AI-powered teaching assistant platform for rural education: helps teachers generate lesson plans, quizzes, and multimedia materials in minutes, and provides students with explanations, self-testing, and personalized learning paths.
+An AI teaching assistant for rural education. Teachers enter a topic and get a course outline, exercises, and multimedia materials. Students get explanations, self-tests, and a personalized learning path.
 
 ![Python](https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white)
 ![Streamlit](https://img.shields.io/badge/Streamlit-1.46-FF4B4B?logo=streamlit&logoColor=white)
-![DashScope](https://img.shields.io/badge/LLM-DashScope-FF6A00)
+![LLM](https://img.shields.io/badge/LLM-OpenAI%20compatible-412991)
 ![License](https://img.shields.io/badge/License-MIT-green)
+
+🏆 **National Third Prize, 14th China Software Cup**
+
+<img src="docs/images/demo.gif" alt="Demo" width="760">
 
 </div>
 
 ---
 
-## The Problem It Solves
+## Demo Video
 
-Rural schools often face teacher shortages and heavy workloads — one teacher may cover multiple subjects, writing lesson plans, exams, and slides from scratch. This system packages LLM capabilities into two workflows:
+The animation above is a quick preview of the 5-minute walkthrough. The full video covers content generation, multimedia, and resource management on the teacher side, plus self-tests and learning paths on the student side.
 
-- **For teachers** — enter a topic and get a structured course outline, PPT content, quiz, case study, or lab guide within minutes, along with AI-generated illustrations and TTS audio, exportable to PDF and saved to the resource library.
-- **For students** — knowledge explanations, self-practice with instant feedback, and personalized learning paths visualized as knowledge graphs, giving each student targeted guidance even in large classes.
+https://github.com/yueyyer/ai-teaching-resource-generator/raw/main/docs/demo.mp4
 
-## Feature Overview
+<sub>If the video does not play inline, download [docs/demo.mp4](docs/demo.mp4).</sub>
 
-The app uses a teacher / student dual-module design with sidebar switching.
+## The Problem
 
-### Teacher Module
+Rural schools are often short of teachers. One teacher may cover several subjects and build lesson plans, quizzes, and slides from scratch. This app turns LLM capabilities into two workflows:
+
+- **Teachers** pick a subject, grade level, and resource type, describe what they need, and get structured content. They can add AI illustrations and audio, export to PDF, and save it to a resource library.
+- **Students** get explanations, self-tests, and a personalized learning path shown as a knowledge graph.
+
+## Screenshots
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/images/teacher-content.png" alt="Content generation"><br><sub><b>Content generation</b>: choose type, subject, and level; text, voice, or image input</sub></td>
+    <td width="50%"><img src="docs/images/teacher-multimedia.png" alt="Multimedia"><br><sub><b>Multimedia</b>: AI illustrations, text-to-speech, image recognition</sub></td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="docs/images/student-practice.png" alt="Self-test"><br><sub><b>Self-test</b>: generate questions by subject, level, and count; get a score report</sub></td>
+    <td width="50%"><img src="docs/images/student-learning-path.png" alt="Learning path"><br><sub><b>Personalized learning</b>: topic and difficulty in, learning path and knowledge graph out</sub></td>
+  </tr>
+  <tr>
+    <td colspan="2"><img src="docs/images/teacher-resources.png" alt="Resource library"><br><sub><b>Resource library</b>: results saved in SQLite, with filtering, search, and link sharing</sub></td>
+  </tr>
+</table>
+
+## Features
+
+The app has a teacher module and a student module, switched from the sidebar.
+
+### Teacher
 
 | Feature | Description |
 |---------|-------------|
-| Content Generation | 5 resource types: course outline, teaching PPT, quiz, case study, lab guide; customizable by subject and level |
-| Multimodal Input | Speech recognition (iFlytek streaming ASR) and image recognition (OCR) in addition to text |
-| Multimedia Studio | Text-to-image generation, TTS (gTTS), iFlytek OCR |
-| Resource Management | SQLite-backed library: save, search, categorize, delete; resource link sharing |
-| Analytics | Usage statistics and visualization |
-| Chat | LLM-powered teaching Q&A assistant |
+| Content generation | Course outlines, slide content, exercises, case studies, lab guides; tailored by subject and level |
+| Multimodal input | Text, uploaded audio (speech recognition), uploaded images (recognition) |
+| Multimedia | iFlytek text-to-image, gTTS speech, image recognition |
+| Resource library | SQLite storage: save, filter, search, delete, and share links |
+| Statistics | Counts by resource type and subject, plus recent activity |
+| Chat | LLM-powered teaching Q&A |
 
-### Student Module
+### Student
 
 | Feature | Description |
 |---------|-------------|
-| Knowledge Explanation | Student-friendly breakdown of concepts |
-| Self-Practice | Auto-generated quizzes with instant feedback |
-| Personalized Learning | Individual learning paths visualized as knowledge graphs |
-| Resource Search | Library retrieval + Wikipedia knowledge augmentation |
+| Explanations | Student-facing explanations by subject and level |
+| Chat | Q&A from a student's point of view |
+| Self-test | Exercises by subject, level, and count, with a score report |
+| Personalized learning | Staged learning path and knowledge graph from a topic and difficulty |
+| Resource search | Search the local library, supplemented by Wikipedia |
 
-### Design Notes
+## How It Works
 
-- **Prompt engineering** — each resource type has a dedicated prompt template (`prompts/`) with subject/level parameters injected dynamically; outputs follow a Bloom's-taxonomy-aligned progressive structure.
-- **Local persistence** — all generated content is stored in SQLite, searchable and reusable across sessions.
-- **Model-agnostic** — LLM calls use the OpenAI-compatible protocol; switch between DashScope / OpenAI / other providers via environment variables.
+<img src="docs/images/architecture.png" alt="Architecture" width="760">
+
+- **Prompts and structured output**: each resource type has its own prompt template (`prompts/`) with subject, level, and request injected as parameters. The learning path asks the model for JSON (stages plus graph nodes and edges), which is parsed and then rendered.
+- **Failure handling**: if parsing or an API call fails, the UI shows an error and falls back to an empty result instead of crashing.
+- **Provider-agnostic**: LLM calls use the OpenAI-compatible protocol; switch providers with environment variables. Alibaba DashScope is the default.
+- **Local persistence**: generated content and activity logs are stored in SQLite and reusable across sessions.
 
 ## Getting Started
 
-### Prerequisites
+### Requirements
 
 - Python 3.11+
-- An OpenAI-compatible LLM API key (e.g., Alibaba DashScope)
-- An iFlytek account (optional — for ASR, OCR, and image generation)
+- An OpenAI-compatible LLM API key (e.g. Alibaba DashScope)
+- Optional: iFlytek account (text-to-image), Tripo3D key (3D generation)
 
-### Run Locally
+### Run locally
 
 ```bash
-# 1. Clone the repo
+# 1. Clone
 git clone https://github.com/yueyyer/ai-teaching-resource-generator.git
 cd ai-teaching-resource-generator
 
-# 2. Install dependencies
+# 2. Install
 python -m venv venv
 source venv/bin/activate   # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 
-# 3. Configure API keys
-cp .env.example .env
-# Edit .env with your own keys:
-#   OpenAI-compatible LLM key (e.g., Alibaba DashScope)
-#   iFlytek APPID / APIKEY / APISECRET (for ASR, image generation, OCR)
+# 3. Configure keys
+cp .env.example .env       # then fill in your own keys
 
 # 4. Launch
 streamlit run exercise.py
 ```
 
-Open `http://localhost:8501` in your browser.
+Open `http://localhost:8501`.
 
-### Run with Docker
+> No API keys are stored in this repository. Keys are read only from a local `.env`, which is git-ignored.
+
+### Docker
 
 ```bash
 docker build -t ai-teaching .
@@ -95,59 +126,38 @@ docker run -p 8501:8501 --env-file .env ai-teaching
 
 ```plaintext
 ai-teaching-resource-generator/
-├── exercise.py            # Main app entry (teacher/student modules)
-├── prompts/               # Prompt templates (outline / PPT / quiz, etc.)
-│   ├── tabler_prompt.py   # Course outline generation
-│   ├── dictator_prompt.py # Outline structure parsing
-│   └── quizzy_prompt.py   # Quiz generation
-├── word2picture.py        # Text-to-image API wrapper
-├── picture1.py            # Image utilities
-├── ocr_scenes_demo.py     # OCR
-├── 大模型中文语音识别.py       # iFlytek streaming ASR (Chinese)
+├── exercise.py            # Main entry: teacher / student modules
+├── prompts/               # Prompt templates per resource type
+├── word2picture.py        # iFlytek text-to-image client
+├── picture1.py            # Image and 3D generation page
+├── ocr_scenes_demo.py     # iFlytek scene recognition
+├── 大模型中文语音识别.py      # iFlytek streaming speech recognition
 ├── sidebar_css.py         # Sidebar styles
-├── teaching_resources.db  # SQLite resource library
+├── .env.example           # Environment variable template
+├── docs/                  # Demo video and screenshots
 ├── requirements.txt
 ├── Dockerfile
 └── .streamlit/config.toml # Streamlit theme
 ```
 
-> `app.py` is an early English-language prototype (Automated Course Content Generator); the current mainline entry is `exercise.py`.
+> `app.py` is an early English prototype kept for reference. The current entry point is `exercise.py`.
 
 ## Tech Stack
 
-- **UI**: Streamlit with custom CSS (gradient card-based design, themed via `.streamlit/config.toml`)
-- **LLM**: OpenAI-compatible SDK, targeting Alibaba DashScope by default
-- **Speech**: iFlytek streaming ASR, SpeechRecognition, gTTS
-- **Vision**: iFlytek text-to-image, OCR, Pillow
-- **Storage**: SQLite (resource library + operation logs)
-- **Deployment**: Docker (`python:3.11-slim`)
-
-## Screenshots
-
-> 📌 To be added. Suggested shots:
->
-> 1. Teacher "Content Generation" page — input and generated output
-> 2. Student "Personalized Learning" knowledge graph
-> 3. Resource management page
->
-> ```markdown
-> ![Content Generation](docs/screenshot-teacher.png)
-> ![Knowledge Graph](docs/screenshot-graph.png)
-> ```
+- **UI**: Streamlit with custom CSS
+- **LLM**: OpenAI SDK (compatible protocol), DashScope by default
+- **Speech**: SpeechRecognition, gTTS, iFlytek speech recognition
+- **Vision**: iFlytek text-to-image, DashScope image recognition, Pillow
+- **Storage**: SQLite
+- **Export and deployment**: FPDF for PDF; Docker
 
 ## Roadmap
 
-- [ ] Direct .pptx export (currently generates outline content)
-- [ ] Auto grading and mistake notebook
-- [ ] Multi-teacher accounts and class management
-- [ ] Offline model support (for schools with limited connectivity)
+- [ ] Export `.pptx` slides directly (currently generates outline content)
+- [ ] Mistake notebook for exercises
+- [ ] Multiple teacher accounts and class management
+- [ ] Offline model support for schools with limited connectivity
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
-
----
-
-<div align="center">
-If you find this project useful, a ⭐ star would be appreciated!
-</div>
+Released under the [MIT License](LICENSE).

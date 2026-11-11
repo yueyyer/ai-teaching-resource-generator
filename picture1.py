@@ -1,4 +1,5 @@
 import streamlit as st
+from dotenv import load_dotenv
 from word2picture import generate_picture_by_text
 from pathlib import Path
 import requests
@@ -7,13 +8,15 @@ import os
 import mimetypes
 import json
 
-# 讯飞API配置（请替换为你自己的）
-APPID = 'b18dc113'
-APIKEY = '20082c2448c81bcb4fa76a12c6be12fe'
-APISECRET = 'NjRkNDk5MWUwNmU1MDg5Y2RjZjczOWM2'
+load_dotenv()
 
-# Tripo3D API Key（请替换为你的真实API Key）
-TRIPO3D_API_KEY = 'tsk_sNdMKve3WQhbTa2jo3hI2ixm9UESLCHFMHZXzlygKXm'
+# 讯飞API配置（在 .env 中配置）
+APPID = os.getenv("XFYUN_APPID", "")
+APIKEY = os.getenv("XFYUN_API_KEY", "")
+APISECRET = os.getenv("XFYUN_API_SECRET", "")
+
+# Tripo3D API Key（在 .env 中配置）
+TRIPO3D_API_KEY = os.getenv("TRIPO3D_API_KEY", "")
 
 SAVE_DIR = Path("generated_images")
 SAVE_DIR.mkdir(exist_ok=True)

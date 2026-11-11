@@ -196,11 +196,10 @@ def parser_Message(message, save_dir="./"):
 
 
 if __name__ == '__main__':
-    # 运行前请配置以下鉴权三要素，获取途径：https://console.xfyun.cn/services/tti
-    # 注意：这里的APIKEY和APISECRET在你的代码中是反的
-    APPID = 'b18dc113'
-    APIKEY = '20082c2448c81bcb4fa76a12c6be12fe'  # 这个是真正的APIKey
-    APISECRET = 'NjRkNDk5MWUwNmU1MDg5Y2RjZjczOWM2'  # 这个是真正的APISecret
+    # 运行前请在 .env 中配置鉴权三要素，获取途径：https://console.xfyun.cn/services/tti
+    APPID = os.getenv("XFYUN_APPID", "")
+    APIKEY = os.getenv("XFYUN_API_KEY", "")
+    APISECRET = os.getenv("XFYUN_API_SECRET", "")
     desc = '''生成一张图：远处有着高山，山上覆盖着冰雪，近处有着一片湛蓝的湖泊'''
     
     result = generate_picture_by_text(desc, APPID, APIKEY, APISECRET, "./")

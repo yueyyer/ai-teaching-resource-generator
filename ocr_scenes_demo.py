@@ -1,11 +1,12 @@
+import os
 import requests
 import time
 import hashlib
 import base64
 
 URL = "http://tupapi.xfyun.cn/v1/scene"
-APPID = "b18dc113"
-API_KEY = "20082c2448c81bcb4fa76a12c6be12fe"
+APPID = os.getenv("XFYUN_APPID", "")
+API_KEY = os.getenv("XFYUN_API_KEY", "")
 
 def getHeader(image_name, image_url=None):
     curTime = str(int(time.time()))

@@ -2,6 +2,9 @@ import streamlit as st
 import openai
 from dotenv import load_dotenv
 import os
+
+load_dotenv()
+
 import json
 import unicodedata
 from fpdf import FPDF, HTMLMixin
@@ -420,7 +423,7 @@ def upload_image_to_smms(img_bytes):
         return None
 
 
-DASHSCOPE_API_KEY = "sk-060679f32afd48798bd98af3118dfc5b"  # 🔐 请替换成你自己的 DashScope Key
+DASHSCOPE_API_KEY = os.getenv("DASHSCOPE_API_KEY", "")  # 🔐 在 .env 中配置 DashScope Key
 
 import base64
 import json
@@ -746,9 +749,9 @@ def page_multimedia_production():
             if st.button("✨ 生成图像", use_container_width=True):
                 if xfyun_prompt.strip():
                     with st.spinner("正在生成图片..."):
-                        APPID = 'b18dc113'
-                        APIKEY = '20082c2448c81bcb4fa76a12c6be12fe'
-                        APISECRET = 'NjRkNDk5MWUwNmU1MDg5Y2RjZjczOWM2'
+                        APPID = os.getenv("XFYUN_APPID", "")
+                        APIKEY = os.getenv("XFYUN_API_KEY", "")
+                        APISECRET = os.getenv("XFYUN_API_SECRET", "")
                         try:
                             img_path = generate_picture_by_text(
                                 xfyun_prompt, APPID, APIKEY, APISECRET, save_dir=str(RESOURCE_DIR)
@@ -2126,9 +2129,11 @@ def main():
 
     # 加载API Key
     try:
-        # 优先从环境变量加载，如果失败则使用你在代码中提供的硬编码key
-        api_key = os.getenv("OPENAI_API_KEY", "sk-f6a020a664c64dd5a85e7e8317537619")
+        # 从环境变量加载（.env），不在代码中保存密钥
+        api_key = os.getenv("OPENAI_API_KEY")
         base_url = os.getenv("OPENAI_API_BASE", "https://dashscope.aliyuncs.com/compatible-mode/v1")
+        if not api_key:
+            raise RuntimeError("请在 .env 中配置 OPENAI_API_KEY")
         
         global client
         client = openai.OpenAI(api_key=api_key, base_url=base_url)

@@ -342,8 +342,10 @@ BOT_AVATAR = "🤖"
 
 # API配置
 try:
-    api_key = "sk-xlSmAXJRk8FraBrG26FcD8CfD725469cB70037A7D4Bf77Aa"
-    base_url = "https://free.v36.cm/v1"
+    api_key = os.getenv("OPENAI_API_KEY")
+    base_url = os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1")
+    if not api_key:
+        raise RuntimeError("请在 .env 中配置 OPENAI_API_KEY")
     
     client = OpenAI(
         api_key=api_key,
